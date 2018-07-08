@@ -6,10 +6,19 @@ class SimpleJob():
     system_time = 0
     # server_time = 0
     is_done = False
+    is_blocked = False
 
 
     def __init__(self, total):
         self.total_time_needed = total
+
+
+    def __str__(self):
+        return "total " + str(self.total_time_needed) + " " + \
+               "consumed " + str(self.consumed_time) + " " + \
+               "waiting " + str(self.waiting_time) + " " + \
+               "done " + str(self.is_done) + " " + \
+               "blocked " + str(self.is_blocked) + "\n"
 
 
     def can_be_done(self, t):
