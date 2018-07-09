@@ -1,5 +1,6 @@
 from random import randint
 from job import SimpleJob
+from stats import StatsAggregator
 
 class SimpleQueue():
 
@@ -13,6 +14,8 @@ class SimpleQueue():
         self.jobs = []
         self.current_servicing_job = None
         self.done_jobs = []
+        self.total_elapsed_time = 0
+        self.stats = StatsAggregator()
 
 
     def __str__(self):
@@ -26,10 +29,14 @@ class SimpleQueue():
 
 
     def enqueue(self, job):
+        # self.stats.
+
         if self.length < self.capacity:
             self.length += 1
+
             if self.policy == "Random" or self.policy == "PS" or self.policy == "FCFS":
                 self.jobs.append(job)
+
             if self.policy == "SRJF":
                 if self.current_servicing_job is not None:
                     current_remaining_time = self.current_servicing_job.total_time_needed - self.current_servicing_job.consumed_time
@@ -40,13 +47,18 @@ class SimpleQueue():
                         self.jobs.append(job)
                 else:
                     self.jobs.append(job)
+
             job.next_queue = self.next_queue
+            job.current_queue = self
             return True
+
         job.is_blocked = True
         return False
 
 
     def serve(self, t):
+        self.total_elapsed_time += t
+
         if self.policy == "PS":
             while t > 0:
                 num_jobs = self.jobs.__len__()
@@ -61,6 +73,7 @@ class SimpleQueue():
                 while self.jobs.count(None) > 0:
                     self.jobs.pop(self.jobs.index(None))
                 t = extra_t
+
         if self.policy == "Random" or self.policy == "SRJF" or self.policy == "FCFS":
             if self.current_servicing_job is None:
                 self.choose_job_to_service()
@@ -79,12 +92,14 @@ class SimpleQueue():
 
 
     def choose_job_to_service(self):
+
         if self.policy == "Random":
             if self.jobs.__len__() > 0:
                 job = self.jobs.pop(randint(0, self.length - 1))
                 self.current_servicing_job = job
             else:
                 self.current_servicing_job = None
+
         if self.policy == "SRJF":
             min_remaining_time = float("inf")
             min_job = None
@@ -96,6 +111,7 @@ class SimpleQueue():
             self.current_servicing_job = min_job
             if min_job is not None:
                 self.jobs.pop(self.jobs.index(min_job))
+
         if self.policy == "FCFS":
             if self.jobs.__len__() > 0:
                 job = self.jobs.pop(0)

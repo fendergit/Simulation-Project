@@ -9,6 +9,7 @@ class SimpleJob():
         self.is_done = False
         self.is_blocked = False
         self.next_queue = None
+        self.current_queue = None
 
 
     def __str__(self):
@@ -16,7 +17,7 @@ class SimpleJob():
                "consumed " + str(self.consumed_time) + " " + \
                "waiting " + str(self.waiting_time) + " " + \
                "done " + str(self.is_done) + " " + \
-               "blocked " + str(self.is_blocked) #+ "\n"
+               "blocked " + str(self.is_blocked)
 
 
     def make_done(self, extra_t):

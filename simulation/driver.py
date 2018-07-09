@@ -43,15 +43,13 @@ for i in range(5):
         next_arrival_q1 = randint(4, 6)
     if next_arrival_q2 == 0:
         next_arrival_q2 = randint(1, 3)
-    print next_arrival_q1, next_arrival_q2
+    # print next_arrival_q1, next_arrival_q2
     if next_arrival_q1 < next_arrival_q2:
         next_arrival_q2, next_arrival_q1 = ongoing_serve_enqueue(next_arrival_q1, q1, next_arrival_q2, q2, q)
     elif next_arrival_q1 > next_arrival_q2:
         next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q)
     else:
         next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q, True)
-
-
 
 
 '''
