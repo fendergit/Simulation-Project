@@ -1,7 +1,7 @@
 from models.job import SimpleJob
 from models.queue import SimpleQueue
 
-random_queue = SimpleQueue(2, 1, "SRJF")
+random_queue = SimpleQueue(2, 1, "PS")
 # print random_queue
 job1 = SimpleJob(1)
 job2 = SimpleJob(2)

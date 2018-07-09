@@ -38,25 +38,43 @@ class SimpleQueue():
                 else:
                     self.jobs.append(job)
                 return True
+            if self.policy == "PS":
+                self.jobs.append(job)
+                return True
         job.is_blocked = True
         return False
 
 
     def serve(self, t):
-        if self.current_servicing_job is None:
-            self.choose_job_to_service()
-        if self.current_servicing_job is not None:
+        if self.policy == "PS":
             while t > 0:
-                extra_t = self.current_servicing_job.consume(t)
+                num_jobs = self.jobs.__len__()
+                extra_t = 0
+                if num_jobs > 0:
+                    chunk_t = t / float(num_jobs)
                 for job in self.jobs:
-                    job.waiting_time += t - extra_t
-                if self.current_servicing_job.is_done:
-                    self.current_servicing_job = None
-                    self.length -= 1
-                    self.choose_job_to_service()
-                if self.current_servicing_job is None:
-                    break
+                    extra_t += job.consume(chunk_t)
+                    if job.is_done:
+                        self.length -= 1
+                        self.jobs[self.jobs.index(job)] = None
+                while self.jobs.count(None) > 0:
+                    self.jobs.pop(self.jobs.index(None))
                 t = extra_t
+        if self.policy == "Random" or self.policy == "SRJF":
+            if self.current_servicing_job is None:
+                self.choose_job_to_service()
+            if self.current_servicing_job is not None:
+                while t > 0:
+                    extra_t = self.current_servicing_job.consume(t)
+                    for job in self.jobs:
+                        job.waiting_time += t - extra_t
+                    if self.current_servicing_job.is_done:
+                        self.current_servicing_job = None
+                        self.length -= 1
+                        self.choose_job_to_service()
+                    if self.current_servicing_job is None:
+                        break
+                    t = extra_t
 
 
     def choose_job_to_service(self):
