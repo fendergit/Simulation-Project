@@ -3,9 +3,9 @@ from models.queue import SimpleQueue
 from utils.functions import generate_random_expo
 from random import randint
 
-q = SimpleQueue(2, 1, "ps")
-q1 = SimpleQueue(5, 1, "FCFS", q)
-q2 = SimpleQueue(5, 1, "FCFS", q)
+q3 = SimpleQueue(8, 1, "PS")
+q1 = SimpleQueue(100, 5, "SRJF", q3)
+q2 = SimpleQueue(12, 3, "Random", q3)
 
 
 def printall(queue):
@@ -38,19 +38,22 @@ def ongoing_serve_enqueue(min_time, min_queue, max_time, max_queue, next_queue, 
 
 next_arrival_q1 = next_arrival_q2 = 0
 
-for i in range(5):
+for i in range(500000):
     if next_arrival_q1 == 0:
-        next_arrival_q1 = randint(4, 6)
+        next_arrival_q1 = generate_random_expo(7)
     if next_arrival_q2 == 0:
-        next_arrival_q2 = randint(1, 3)
+        next_arrival_q2 = generate_random_expo(2)
     # print next_arrival_q1, next_arrival_q2
     if next_arrival_q1 < next_arrival_q2:
-        next_arrival_q2, next_arrival_q1 = ongoing_serve_enqueue(next_arrival_q1, q1, next_arrival_q2, q2, q)
+        next_arrival_q2, next_arrival_q1 = ongoing_serve_enqueue(next_arrival_q1, q1, next_arrival_q2, q2, q3)
     elif next_arrival_q1 > next_arrival_q2:
-        next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q)
+        next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q3)
     else:
-        next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q, True)
+        next_arrival_q1, next_arrival_q2 = ongoing_serve_enqueue(next_arrival_q2, q2, next_arrival_q1, q1, q3, True)
 
+
+pb1, lq1, wq1 = q1.stats.aggregate_results()
+print pb1, lq1, wq1
 
 '''
         q1.serve(next_arrival_q1)

@@ -1,6 +1,7 @@
 from random import randint
 from job import SimpleJob
 from stats import StatsAggregator
+from utils.functions import generate_random_expo
 
 class SimpleQueue():
 
@@ -15,7 +16,7 @@ class SimpleQueue():
         self.current_servicing_job = None
         self.done_jobs = []
         self.total_elapsed_time = 0
-        self.stats = StatsAggregator()
+        self.stats = StatsAggregator(capacity)
 
 
     def __str__(self):
@@ -29,7 +30,10 @@ class SimpleQueue():
 
 
     def enqueue(self, job):
-        # self.stats.
+        # if self.stats.total_done_jobs > 5000:
+        self.stats.num_incoming_jobs += 1
+        self.stats.length += self.length
+        self.stats.num_length_reports += 1
 
         if self.length < self.capacity:
             self.length += 1
@@ -50,9 +54,13 @@ class SimpleQueue():
 
             job.next_queue = self.next_queue
             job.current_queue = self
+            # if self.stats.total_done_jobs > 5000:
+            self.stats.num_jobs += 1
             return True
 
         job.is_blocked = True
+        # if self.stats.total_done_jobs > 5000:
+        self.stats.blocked_jobs += 1
         return False
 
 
@@ -82,6 +90,7 @@ class SimpleQueue():
                     extra_t = self.current_servicing_job.consume(t)
                     for job in self.jobs:
                         job.waiting_time += t - extra_t
+                        self.stats.waiting_time += t - extra_t
                     if self.current_servicing_job.is_done:
                         self.current_servicing_job = None
                         self.length -= 1
@@ -121,4 +130,4 @@ class SimpleQueue():
 
 
     def generate_job(self):
-        return SimpleJob(2)
+        return SimpleJob(generate_random_expo(self.service_time))
