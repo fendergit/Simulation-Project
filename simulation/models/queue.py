@@ -24,7 +24,7 @@ class SimpleQueue():
     def enqueue(self, job):
         if self.length < self.capacity:
             self.length += 1
-            if self.policy == "Random":
+            if self.policy == "Random" or self.policy == "PS" or self.policy == "FCFS":
                 self.jobs.append(job)
                 return True
             if self.policy == "SRJF":
@@ -37,9 +37,6 @@ class SimpleQueue():
                         self.jobs.append(job)
                 else:
                     self.jobs.append(job)
-                return True
-            if self.policy == "PS":
-                self.jobs.append(job)
                 return True
         job.is_blocked = True
         return False
@@ -60,7 +57,7 @@ class SimpleQueue():
                 while self.jobs.count(None) > 0:
                     self.jobs.pop(self.jobs.index(None))
                 t = extra_t
-        if self.policy == "Random" or self.policy == "SRJF":
+        if self.policy == "Random" or self.policy == "SRJF" or self.policy == "FCFS":
             if self.current_servicing_job is None:
                 self.choose_job_to_service()
             if self.current_servicing_job is not None:
@@ -95,3 +92,9 @@ class SimpleQueue():
             self.current_servicing_job = min_job
             if min_job is not None:
                 self.jobs.pop(self.jobs.index(min_job))
+        if self.policy == "FCFS":
+            if self.jobs.__len__() > 0:
+                job = self.jobs.pop(0)
+                self.current_servicing_job = job
+            else:
+                self.current_servicing_job = None
