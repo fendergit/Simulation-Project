@@ -1,24 +1,28 @@
 from random import randint
+from job import SimpleJob
 
 class SimpleQueue():
 
-    capacity = 100
-    service_time = 1
-    policy = "Random"
-    length = 0
-    jobs = []
-    current_servicing_job = None
 
-    def __init__(self, capacity, service_time, policy):
+    def __init__(self, capacity=100, service_time=1, policy="Random", next_queue=None):
         self.capacity = capacity
         self.service_time = service_time
         self.policy = policy
+        self.next_queue = next_queue
+        self.length = 0
+        self.jobs = []
+        self.current_servicing_job = None
+        self.done_jobs = []
 
 
     def __str__(self):
-            return "length " + str(self.length) + " " + \
-                   "jobs " + str(self.jobs) + " " + \
-                   "current " + str(self.current_servicing_job) + "\n"
+        res_str = "\nlength " + str(self.length) + " " + \
+              "jobs " + str(self.jobs) + " " + \
+              "current " + str(self.current_servicing_job) + "\n"
+        for job in self.jobs:
+            res_str += job.__str__() + "\n"
+        return res_str
+
 
 
     def enqueue(self, job):
@@ -26,7 +30,6 @@ class SimpleQueue():
             self.length += 1
             if self.policy == "Random" or self.policy == "PS" or self.policy == "FCFS":
                 self.jobs.append(job)
-                return True
             if self.policy == "SRJF":
                 if self.current_servicing_job is not None:
                     current_remaining_time = self.current_servicing_job.total_time_needed - self.current_servicing_job.consumed_time
@@ -37,7 +40,8 @@ class SimpleQueue():
                         self.jobs.append(job)
                 else:
                     self.jobs.append(job)
-                return True
+            job.next_queue = self.next_queue
+            return True
         job.is_blocked = True
         return False
 
@@ -98,3 +102,7 @@ class SimpleQueue():
                 self.current_servicing_job = job
             else:
                 self.current_servicing_job = None
+
+
+    def generate_job(self):
+        return SimpleJob(2)

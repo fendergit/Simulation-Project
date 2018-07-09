@@ -1,16 +1,14 @@
 class SimpleJob():
 
-    total_time_needed = 1.00
-    consumed_time = 0
-    waiting_time = 0
-    system_time = 0
-    # server_time = 0
-    is_done = False
-    is_blocked = False
-
 
     def __init__(self, total):
         self.total_time_needed = total
+        self.consumed_time = 0
+        self.waiting_time = 0
+        self.system_time = 0
+        self.is_done = False
+        self.is_blocked = False
+        self.next_queue = None
 
 
     def __str__(self):
@@ -18,13 +16,13 @@ class SimpleJob():
                "consumed " + str(self.consumed_time) + " " + \
                "waiting " + str(self.waiting_time) + " " + \
                "done " + str(self.is_done) + " " + \
-               "blocked " + str(self.is_blocked) + "\n"
+               "blocked " + str(self.is_blocked) #+ "\n"
 
 
-    def can_be_done(self, t):
-        if self.consumed_time + t >= self.total_time_needed:
-            return True
-        return False
+    def make_done(self, extra_t):
+        self.is_done = True
+        if self.next_queue is not None:
+            self.next_queue.done_jobs.append((self, extra_t))
 
 
     def consume(self, t):
@@ -34,7 +32,7 @@ class SimpleJob():
         else:
             extra = self.consumed_time + t - self.total_time_needed
             self.consumed_time = self.total_time_needed
-            self.is_done = True
+            self.make_done(extra)
         return extra
 
 
