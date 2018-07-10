@@ -90,7 +90,8 @@ class SimpleQueue():
                     extra_t = self.current_servicing_job.consume(t)
                     for job in self.jobs:
                         job.waiting_time += t - extra_t
-                        self.stats.waiting_time += t - extra_t
+                        if StatsAggregator.total_done_jobs > 5000:
+                            self.stats.waiting_time += t - extra_t
                     if self.current_servicing_job.is_done:
                         self.current_servicing_job = None
                         self.length -= 1
