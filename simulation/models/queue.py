@@ -6,7 +6,7 @@ from utils.functions import generate_random_expo
 class SimpleQueue():
 
 
-    def __init__(self, capacity=100, service_time=1, policy="Random", next_queue=None):
+    def __init__(self, capacity=100, service_time=1, policy="Random", next_queue=None, stats_agg=None):
         self.capacity = capacity
         self.service_time = service_time
         self.policy = policy
@@ -16,7 +16,7 @@ class SimpleQueue():
         self.current_servicing_job = None
         self.done_jobs = []
         self.total_elapsed_time = 0
-        self.stats = StatsAggregator(capacity)
+        self.stats = stats_agg
 
 
     def __str__(self):
@@ -30,10 +30,10 @@ class SimpleQueue():
 
 
     def enqueue(self, job):
-        # if self.stats.total_done_jobs > 5000:
-        self.stats.num_incoming_jobs += 1
-        self.stats.length += self.length
-        self.stats.num_length_reports += 1
+        if StatsAggregator.total_done_jobs > 5000:
+            self.stats.num_incoming_jobs += 1
+            self.stats.length += self.length
+            self.stats.num_length_reports += 1
 
         if self.length < self.capacity:
             self.length += 1
@@ -54,13 +54,13 @@ class SimpleQueue():
 
             job.next_queue = self.next_queue
             job.current_queue = self
-            # if self.stats.total_done_jobs > 5000:
-            self.stats.num_jobs += 1
+            if StatsAggregator.total_done_jobs > 5000:
+                self.stats.num_enqueue_jobs += 1
             return True
 
         job.is_blocked = True
-        # if self.stats.total_done_jobs > 5000:
-        self.stats.blocked_jobs += 1
+        if StatsAggregator.total_done_jobs > 5000:
+            self.stats.blocked_jobs += 1
         return False
 
 

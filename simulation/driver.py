@@ -1,11 +1,20 @@
 from models.job import SimpleJob
 from models.queue import SimpleQueue
+from models.stats import StatsAggregator
 from utils.functions import generate_random_expo
 from random import randint
 
-q3 = SimpleQueue(8, 1, "PS")
-q1 = SimpleQueue(100, 5, "SRJF", q3)
-q2 = SimpleQueue(12, 3, "Random", q3)
+q1_capacity = 100
+q2_capacity = 12
+q3_capacity = 8
+
+q1_stats_agg = StatsAggregator(q1_capacity)
+q2_stats_agg = StatsAggregator(q2_capacity)
+q3_stats_agg = StatsAggregator(q3_capacity)
+
+q3 = SimpleQueue(q3_capacity, 1.0, "PS", None, q3_stats_agg)
+q1 = SimpleQueue(q1_capacity, 1.0/5, "SRJF", q3, q1_stats_agg)
+q2 = SimpleQueue(q2_capacity, 1.0/3, "Random", q3, q2_stats_agg)
 
 
 def printall(queue):
@@ -38,7 +47,10 @@ def ongoing_serve_enqueue(min_time, min_queue, max_time, max_queue, next_queue, 
 
 next_arrival_q1 = next_arrival_q2 = 0
 
-for i in range(500000):
+# for i in range(500000):
+while StatsAggregator.total_done_jobs < 1005000:
+    if StatsAggregator.total_done_jobs % 100000 == 0 and StatsAggregator.total_done_jobs != 0:
+        print StatsAggregator.total_done_jobs
     if next_arrival_q1 == 0:
         next_arrival_q1 = generate_random_expo(7)
     if next_arrival_q2 == 0:

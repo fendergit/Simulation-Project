@@ -1,3 +1,4 @@
+from stats import StatsAggregator
 from utils.functions import generate_random_expo
 
 class SimpleJob():
@@ -25,7 +26,9 @@ class SimpleJob():
     def make_done(self, extra_t):
         self.is_done = True
         if self.current_queue.policy == "PS" or self.current_queue.policy == "FCFS":
-            self.current_queue.stats.total_done_jobs += 1
+            StatsAggregator.total_done_jobs += 1
+            if StatsAggregator.total_done_jobs > 5000:
+                StatsAggregator.total_time += self.total_time_needed + self.waiting_time
         if self.next_queue is not None:
             self.total_time_needed += generate_random_expo(self.next_queue.service_time)
             self.next_queue.done_jobs.append((self, extra_t))
