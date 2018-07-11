@@ -5,26 +5,28 @@ from utils.functions import generate_random_expo
 from random import randint
 
 
-file = open('results.txt', 'w')
+file1 = open('results1.txt', 'w')
+file2 = open('results2.txt', 'w')
 
-for i in range(100):
+for i in range(80, 170, 1):
+    print i
 
     q1_capacity = 100
     q2_capacity = 12
-    q3_capacity = 8
+    q3_capacity = i / 10
 
     q1_stats_agg = StatsAggregator(q1_capacity)
     q2_stats_agg = StatsAggregator(q2_capacity)
     q3_stats_agg = StatsAggregator(q3_capacity)
 
-    q3 = SimpleQueue(q3_capacity, 1.0, "PS", None, q3_stats_agg)
+    q3 = SimpleQueue(q3_capacity, 1.0, "FCFS", None, q3_stats_agg)
     q1 = SimpleQueue(q1_capacity, 1.0/5, "SRJF", q3, q1_stats_agg)
     q2 = SimpleQueue(q2_capacity, 1.0/3, "Random", q3, q2_stats_agg)
 
 
     def ongoing_serve_enqueue(min_time, min_queue, max_time, max_queue, next_queue, equal_time=False):
         min_queue.serve(min_time)
-        max_queue.serve(max_time)
+        max_queue.serve(min_time)
 
         if next_queue.done_jobs.__len__() == 0:
             next_queue.serve(min_time)
@@ -48,15 +50,14 @@ for i in range(100):
 
     next_arrival_q1 = next_arrival_q2 = 0
 
-    # for i in range(500000):
-    while StatsAggregator.total_done_jobs < 1005000:
-        # if StatsAggregator.total_done_jobs % 100000 == 0 and StatsAggregator.total_done_jobs != 0:
+    while StatsAggregator.total_done_jobs < 15000:#1005000:
+        # if StatsAggregator.total_done_jobs % 1000 == 0:
         #     print StatsAggregator.total_done_jobs
         if next_arrival_q1 == 0:
             next_arrival_q1 = generate_random_expo(7)
         if next_arrival_q2 == 0:
             next_arrival_q2 = generate_random_expo(2)
-        # print next_arrival_q1, next_arrival_q2
+
         if next_arrival_q1 < next_arrival_q2:
             next_arrival_q2, next_arrival_q1 = ongoing_serve_enqueue(next_arrival_q1, q1, next_arrival_q2, q2, q3)
         elif next_arrival_q1 > next_arrival_q2:
@@ -66,13 +67,17 @@ for i in range(100):
 
 
     pb1, lq1, wq1 = q1.stats.aggregate_results()
-    print pb1, lq1, wq1
-    file.write(str(pb1) + ',' + str(lq1) + ',' + str(wq1) + '\n')
+    # print pb1, lq1, wq1
+    file1.write(str(pb1) + ',' + str(lq1) + ',' + str(wq1) + '\n')
 
-    StatsAggregator.total_done_jobs = StatsAggregator.total_time = 0
+    pb3, t3, lq3 = q3.stats.aggregate_results2()
+    # print pb3, t3, lq3
+    file2.write(str(pb3) + ',' + str(t3) + ',' + str(lq3) + '\n')
 
-file.close()
+    StatsAggregator.total_done_jobs = StatsAggregator.total_time = StatsAggregator.total_elapsed_time = 0
 
+file1.close()
+file2.close()
 
 '''
         q1.serve(next_arrival_q1)

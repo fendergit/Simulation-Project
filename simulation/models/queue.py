@@ -32,8 +32,6 @@ class SimpleQueue():
     def enqueue(self, job):
         if StatsAggregator.total_done_jobs > 5000:
             self.stats.num_incoming_jobs += 1
-            self.stats.length += self.length
-            self.stats.num_length_reports += 1
 
         if self.length < self.capacity:
             self.length += 1
@@ -65,16 +63,20 @@ class SimpleQueue():
 
 
     def serve(self, t):
-        self.total_elapsed_time += t
+        if StatsAggregator.total_done_jobs > 5000:
+            StatsAggregator.total_elapsed_time += t
 
         if self.policy == "PS":
             while t > 0:
+
                 num_jobs = self.jobs.__len__()
                 extra_t = 0
                 if num_jobs > 0:
                     chunk_t = t / float(num_jobs)
                 for job in self.jobs:
                     extra_t += job.consume(chunk_t)
+                    if StatsAggregator.total_done_jobs > 5000:
+                        self.stats.length += self.length * chunk_t
                     if job.is_done:
                         self.length -= 1
                         self.jobs[self.jobs.index(job)] = None
@@ -88,6 +90,8 @@ class SimpleQueue():
             if self.current_servicing_job is not None:
                 while t > 0:
                     extra_t = self.current_servicing_job.consume(t)
+                    if StatsAggregator.total_done_jobs > 5000:
+                        self.stats.length += self.length * (t - extra_t)
                     for job in self.jobs:
                         job.waiting_time += t - extra_t
                         if StatsAggregator.total_done_jobs > 5000:
