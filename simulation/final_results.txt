@@ -1,0 +1,82 @@
+Pb1 = 0.971346099003 with precision 2.0965830809e-05
+LQ1 = 99.97134535    with precision 2.75136589984e-07
+WQ1 = 493.449524026  with precision 0.000686394003779
+
+PS:
+	K3 = 8:
+		Pb3 = 0.0
+		T   = 68.1196373951   with precision 0.198026676976
+		LQ3 = 0.0564303231658 with precision 0.00302947136406
+	K3 = 9:
+		Pb3 = 0.0
+		T   = 97.5089451877   with precision 0.144194744385
+		LQ3 = 0.0564314926699 with precision 0.00241839135703
+	K3 = 10:
+		Pb3 = 0.0
+		T   = 74.4691981829   with precision 0.183119488399
+		LQ3 = 0.0564382493467 with precision 0.00191793511688
+	K3 = 11:
+		Pb3 = 0.0
+		T   = 82.9865737687   with precision 0.150454636798
+		LQ3 = 0.0564078628629 with precision 0.0021310492803
+	K3 = 12:
+		Pb3 = 0.0
+		T   = 75.0496824011   with precision 0.205329293517
+		LQ3 = 0.0563537205993 with precision 0.00256897033209
+	K3 = 13:
+		Pb3 = 0.0
+		T   = 73.0582691019   with precision 0.253848040392
+		LQ3 = 0.0565112619758 with precision 0.00372784667532
+	K3 = 14:
+		Pb3 = 0.0
+		T   = 78.2404428875   with precision 0.202296066284
+		LQ3 = 0.0563201820849 with precision 0.00256886463082
+	K3 = 15:
+		Pb3 = 0.0
+		T   = 58.3736265686   with precision 0.182759757375
+		LQ3 = 0.0564232602101 with precision 0.00211885248587
+	K3 = 16:
+		Pb3 = 0.0
+		T   = 82.7115043487   with precision 0.177797067182
+		LQ3 = 0.0563174441477 with precision 0.00243494689221
+
+
+FCFS:
+	K3 = 8:
+		Pb3 = 0.0
+		T   = 74.8023997972   with precision 0.190155136823
+		LQ3 = 0.0509435870692 with precision 0.00190980443092
+	K3 = 9:
+		Pb3 = 0.0
+		T   = 77.1036289483   with precision 0.223282617966
+		LQ3 = 0.0510844533487 with precision 0.00278991515456
+	K3 = 10:
+		Pb3 = 0.0
+		T   = 79.5775740376   with precision 0.15668487063
+		LQ3 = 0.0510552020023 with precision 0.00232085935527
+	K3 = 11:
+		Pb3 = 0.0
+		T   = 90.1391667657   with precision 0.122069907529
+		LQ3 = 0.0510219360195 with precision 0.00174942830062
+	K3 = 12:
+		Pb3 = 0.0
+		T   = 72.8741933778   with precision 0.185481847314
+		LQ3 = 0.0510552651021 with precision 0.00211224360444
+	K3 = 13:
+		Pb3 = 0.0
+		T   = 83.6314219725   with precision 0.144894702998
+		LQ3 = 0.0510655347822 with precision 0.00181680723186
+	K3 = 14:
+		Pb3 = 0.0
+		T   = 77.7731882578   with precision 0.175784317947
+		LQ3 = 0.0510359733146 with precision 0.00320117266196
+	K3 = 15:
+		Pb3 = 0.0
+		T   = 72.014802529    with precision 0.1855099394
+		LQ3 = 0.0510983984221 with precision 0.00316333343786
+	K3 = 16:
+		Pb3 = 0.0
+		T   = 83.6655457849   with precision 0.172993873874
+		LQ3 = 0.0510324873946 with precision 0.0027835059442
+
+

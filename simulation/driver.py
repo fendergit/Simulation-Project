@@ -1,15 +1,14 @@
 from models.job import SimpleJob
 from models.queue import SimpleQueue
 from models.stats import StatsAggregator
-from utils.functions import generate_random_expo
+from utils.functions import *
 from random import randint
 
 
-file1 = open('results1.txt', 'w')
-file2 = open('results2.txt', 'w')
+file1 = open('results1-tmp.txt', 'w')
+file2 = open('results2-tmp.txt', 'w')
 
 for i in range(80, 170, 1):
-    print i
 
     q1_capacity = 100
     q2_capacity = 12
@@ -50,9 +49,7 @@ for i in range(80, 170, 1):
 
     next_arrival_q1 = next_arrival_q2 = 0
 
-    while StatsAggregator.total_done_jobs < 15000:#1005000:
-        # if StatsAggregator.total_done_jobs % 1000 == 0:
-        #     print StatsAggregator.total_done_jobs
+    while StatsAggregator.total_done_jobs < 5005000:
         if next_arrival_q1 == 0:
             next_arrival_q1 = generate_random_expo(7)
         if next_arrival_q2 == 0:
@@ -67,71 +64,12 @@ for i in range(80, 170, 1):
 
 
     pb1, lq1, wq1 = q1.stats.aggregate_results()
-    # print pb1, lq1, wq1
     file1.write(str(pb1) + ',' + str(lq1) + ',' + str(wq1) + '\n')
 
     pb3, t3, lq3 = q3.stats.aggregate_results2()
-    # print pb3, t3, lq3
     file2.write(str(pb3) + ',' + str(t3) + ',' + str(lq3) + '\n')
 
     StatsAggregator.total_done_jobs = StatsAggregator.total_time = StatsAggregator.total_elapsed_time = 0
 
 file1.close()
 file2.close()
-
-'''
-        q1.serve(next_arrival_q1)
-        q2.serve(next_arrival_q1)
-        if q.done_jobs.__len__() == 0:
-            q.serve(next_arrival_q1)
-        else:
-            done_jobs = sorted(q.done_jobs, key=lambda x: x[1], reverse=True)
-            t = next_arrival_q1
-            for j in done_jobs:
-                q.serve(t-j[1])
-                q.enqueue(j[0])
-                t = j[1]
-            q.serve(t)
-        q1.enqueue(job)
-        q1.serve(next_arrival_q2-next_arrival_q1)
-        q2.serve(next_arrival_q2-next_arrival_q1)
-        q2.enqueue(job)
-'''
-
-'''
-    def printall(queue):
-        print queue
-'''
-
-
-'''
-fcfs_queue = SimpleQueue(2, 1, "FCFS")
-ps_queue = SimpleQueue(2, 1, "FCFS", fcfs_queue)
-#fcfs_queue = SimpleQueue(2, 1, "FCFS")
-srjf_queue = SimpleQueue(2, 1, "SRJF", ps_queue)
-
-jobs = []
-for i in range(5):
-    jobs.append(SimpleJob(i+1))
-
-def printall(queue=ps_queue):
-    print queue
-    # for i in range(5, 0, -1):
-    #     print jobs[i-1]
-
-
-for i in range(5, 0, -1):
-    ps_queue.enqueue(jobs[i-1])
-    printall()
-    ps_queue.serve(2)
-    printall()
-ps_queue.serve(2)
-printall()
-ps_queue.serve(2)
-printall()
-ps_queue.serve(2)
-printall()
-ps_queue.serve(2)
-printall()
-print fcfs_queue.done_jobs
-'''
